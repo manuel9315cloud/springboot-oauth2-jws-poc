@@ -1,0 +1,17 @@
+WAM Server — Puerto 9000
+Responsabilidad: autenticar al cliente y emitir/validar Access Tokens.
+Paso	Acción	Resultado
+1	Recibe Client Assertion	JWT
+2	Verifica firma RS256	Firma válida o inválida
+3	Valida claims	iss, sub, aud, exp, jti
+4	Comprueba reutilización de JTI	Protección contra replay
+5	Emite Access Token	Token opaco
+6	Registra token	Token asociado a expiración y scope
+7	Recibe solicitud de validación	Token recibido
+8	Comprueba token	valid: true/false
+
+Endpoints:
+- POST /oauth/token
+- POST /internal/tokens/validate
+
+Resultado criptográfico: Payments firma con su llave privada. Nubiz verifica con la llave pública de Payments. La llave privada no se comparte.

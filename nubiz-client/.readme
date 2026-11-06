@@ -1,0 +1,20 @@
+1. Nubiz Client — Puerto 8080
+Responsabilidad: representar al consumidor de las APIs del banco.
+Paso	Acción	Resultado
+1	Carga su llave privada	Private Key de Nubiz
+2	Genera JWT Client Assertion	JWT firmado RS256
+3	Solicita Access Token	Envía credenciales OAuth
+4	Recibe Access Token	Token opaco
+5	Invoca Payments	Envía Bearer Token
+6	Recibe respuesta JWS	Respuesta firmada
+7	Verifica firma	valid: true
+
+Endpoints implementados:
+- GET /test/assertion
+- POST /test/jws/verify
+Archivos relevantes:
+- keys/private.pem
+- keys/public.pem
+- keys/payments-public.pem
+- JwtAssertionService
+- JwsVerificationService

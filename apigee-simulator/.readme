@@ -1,0 +1,14 @@
+Apigee Simulator — Puerto 8081
+Responsabilidad: simular la puerta de entrada de la API.
+Paso	Acción	Resultado
+1	Recibe solicitud OAuth	Formulario
+2	Comprueba Basic Auth	API Key y API Secret
+3	Reenvía solicitud a WAM	Solicitud OAuth
+4	Recibe respuesta de WAM	Access Token
+5	Devuelve respuesta a Nubiz	Access Token
+
+Endpoint:
+
+- POST /oauth/token
+
+Importante: las credenciales Basic del gateway son independientes de la autenticación OAuth de Nubiz.

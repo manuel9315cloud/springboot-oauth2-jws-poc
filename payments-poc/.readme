@@ -1,0 +1,22 @@
+Payments POC — Puerto 8082
+Responsabilidad: proteger el acceso a la API y firmar sus respuestas.
+Paso	Acción	Resultado
+1	Recibe solicitud	Bearer Token
+2	Extrae token	Access Token
+3	Consulta WAM	Solicitud de validación
+4	Comprueba resultado	Token válido o inválido
+5	Procesa operación	Resultado de pago
+6	Firma respuesta	JWS RS256
+7	Devuelve respuesta	signed_payload
+
+Endpoints:
+- GET /payments/health
+- GET /payments/secure
+- POST /test/jws/sign
+Archivos relevantes:
+- keys/payments-private.pem
+- keys/payments-public.pem
+- JwsSigningService
+- BearerTokenFilter
+- TokenValidationService
+- SecurityConfig

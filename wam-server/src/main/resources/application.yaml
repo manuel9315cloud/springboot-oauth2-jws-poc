@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: wam-server
+
+server:
+  port: 9000

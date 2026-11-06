@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: payments-poc
+
+server:
+  port: 8082
+
+integration:
+  wam:
+    url: http://localhost:9000

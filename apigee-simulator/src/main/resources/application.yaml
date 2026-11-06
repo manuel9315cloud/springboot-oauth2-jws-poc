@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: apigee-simulator
+
+server:
+  port: 8081
+
+integration:
+  wam:
+    url: http://localhost:9000
+
+gateway:
+  api-key: poc-api-key
+  api-secret: poc-api-secret

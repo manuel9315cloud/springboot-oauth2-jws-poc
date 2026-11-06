@@ -1,0 +1,169 @@
+{
+	"info": {
+		"_postman_id": "894a8119-036b-4cf2-a2a0-566198c68f18",
+		"name": "OAuth POC - Nubiz, Apigee y WAM",
+		"description": "Colección reconstruida. Ejecuta primero '1 - Generar Client Assertion' y luego '2 - Solicitar Access Token por Apigee'. Cada JWT tiene jti de un solo uso. Si ejecutas la prueba aislada de WAM, genera otro JWT antes de solicitar el token.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49548000",
+		"_collection_link": "https://manuel9315e-8319401.postman.co/workspace/Manuel-Castro's-Workspace~a636a6ce-ed70-443b-8747-2518f9b1ad12/collection/49548000-894a8119-036b-4cf2-a2a0-566198c68f18?action=share&source=collection_link&creator=49548000"
+	},
+	"item": [
+		{
+			"name": "1 - Nubiz - Generar Client Assertion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test('Nubiz devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+							"pm.collectionVariables.set('client_assertion', pm.response.text().trim());",
+							"console.log('Client Assertion guardado en variable de colección.');"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{nubiz_url}}/test/assertion",
+					"host": [
+						"{{nubiz_url}}"
+					],
+					"path": [
+						"test",
+						"assertion"
+					]
+				},
+				"description": "Genera un JWT firmado por Nubiz. El script guarda automáticamente el JWT en la variable de colección client_assertion."
+			},
+			"response": []
+		},
+		{
+			"name": "2 - Apigee - Solicitar Access Token",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{gateway_api_key}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{gateway_api_secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "nubiz-client",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_assertion_type",
+							"value": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+							"type": "text"
+						},
+						{
+							"key": "client_assertion",
+							"value": "{{client_assertion}}",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "openid",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{apigee_url}}/oauth/token",
+					"host": [
+						"{{apigee_url}}"
+					],
+					"path": [
+						"oauth",
+						"token"
+					]
+				},
+				"description": "Apigee valida Basic Auth y reenvía los parámetros a WAM. Usa un JWT nuevo para cada solicitud."
+			},
+			"response": []
+		},
+		{
+			"name": "3 - WAM - Verificar Assertion (PRUEBA AISLADA)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "text/plain",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{client_assertion}}"
+				},
+				"url": {
+					"raw": "{{wam_url}}/test/verify",
+					"host": [
+						"{{wam_url}}"
+					],
+					"path": [
+						"test",
+						"verify"
+					]
+				},
+				"description": "Prueba aislada. Consume el jti. Si ejecutas esta petición, genera otro JWT antes de solicitar el Access Token."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "nubiz_url",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "apigee_url",
+			"value": "http://localhost:8081"
+		},
+		{
+			"key": "wam_url",
+			"value": "http://localhost:9000"
+		},
+		{
+			"key": "gateway_api_key",
+			"value": "poc-api-key"
+		},
+		{
+			"key": "gateway_api_secret",
+			"value": "poc-api-secret"
+		},
+		{
+			"key": "client_assertion",
+			"value": ""
+		}
+	]
+}
